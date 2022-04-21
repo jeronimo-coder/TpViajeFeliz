@@ -1,6 +1,8 @@
 <?php
 
 include_once('ViajeFeliz.php');
+include_once('pasajero.php');
+include_once('responsable.php');
 
 echo "Sea bienvenido a Viaje Feliz! \n";
 echo "Ingrese los datos correspondientes al viaje\n";
@@ -10,8 +12,10 @@ echo "Ingrese el destino del viaje: \n";
 $destinoViaje = trim(fgets(STDIN));
 echo "Ingrese la cantidad max de pasajeros: \n";
 $maxPasajerosViaje = trim(fgets(STDIN));
+echo "Responsable del viaje: \n";
+$responsable = obtenerDatos("responsable");
 
-$viaje1 = new Viaje($codigoViaje, $destinoViaje, $maxPasajerosViaje);
+$viaje1 = new Viaje($codigoViaje, $destinoViaje, $maxPasajerosViaje, $responsable);
 $inicializar = true;
 
 do{
@@ -25,7 +29,7 @@ do{
         case '2':
             if($viaje1->quedaLugar()){
                 echo "Ingrese los datos del pasajero: \n";
-                $pasajero = obtenerDatos();
+                $pasajero = obtenerDatos("pasajero");
                 if($viaje1->agregarPasajero($pasajero)){
                     echo "Agregado con exito!";
                 }else{
@@ -38,9 +42,9 @@ do{
 
         case '3':
             echo "Ingrese los datos del pasajero que quiere modificar: \n";
-            $pasajero = obtenerDatos();
+            $pasajero = obtenerDatos("pasajero");
             echo "Ingrese los nuevo datos: \n";
-            $nuevosDatos = obtenerDatos();
+            $nuevosDatos = obtenerDatos("pasajero");
             if($viaje1->modificarPasajero($pasajero, $nuevosDatos)){
                 echo "Modificado con exito.";
             } else {
@@ -50,7 +54,7 @@ do{
         
         case '4':
             echo "Ingrese los datos del pasajero que desea sacar: \n";
-            $pasajeroQuitar = obtenerDatos();
+            $pasajeroQuitar = obtenerDatos("pasajero");
             if($viaje1->quitarPasajero($pasajeroQuitar)){
                 echo "Quitado del viaje con exito.";
             }else{
@@ -76,8 +80,14 @@ do{
             $nuevoMax = intval($nuevoMax);
             $viaje1->setMaxPasajeros($nuevoMax);
             break;
-
+        
         case '8':
+            echo "Datos del responsable: ";
+            $responsableV = obtenerDatos("responsable");
+            $viaje1->setResponsable($responsableV);
+            break;    
+
+        case '9':
             $inicializar = false;
            
     }
@@ -92,17 +102,38 @@ function menu(){
     5 - Modificar destino del viaje.\n
     6 - Modificar codigo del viaje.\n
     7 - Modificar la cantidad de asientos habilitados.\n
-    8 - Salir.\n";
+    8 - Modificar datos del responsable.\n
+    9 - Salir.\n";
     return $menu;
 }
 
-function obtenerDatos(){
-    echo "Nombre: \n";
-    $nombre = trim(fgets(STDIN));
-    echo "Apellido: \n";
-    $apellido = trim(fgets(STDIN));
-    echo "DNI: \n";
-    $dni = intval(fgets(STDIN));
-    $pasajero = ["nombre" => $nombre, "apellido" => $apellido, "Num DNI" => $dni];
-    return $pasajero;
+/** Función que obtiene los datos de cada uno de los pasajeros o responsable
+ * @param string $deQuien
+ * @return object
+ */
+
+function obtenerDatos($deQuien){
+    if($deQuien == "pasajero"){
+        echo "Nombre: \n";
+        $nombre = trim(fgets(STDIN));
+        echo "Apellido: \n";
+        $apellido = trim(fgets(STDIN));
+        echo "DNI: \n";
+        $dni = intval(fgets(STDIN));
+        echo "Telefono: \n";
+        $telefono = trim(fgets(STDIN));
+        $objeto = new Pasajero($nombre, $apellido, $dni, $telefono);
+    } elseif($deQuien == "responsable"){
+        echo "Número Empleado: \n";
+        $numEmpleado = trim(fgets(STDIN));
+        echo "Número Licencia: \n";
+        $numLicencia = trim(fgets(STDIN));
+        echo "Nombre: \n";
+        $nombre = trim(fgets(STDIN));
+        echo "Apellido: \n";
+        $apellido = trim(fgets(STDIN));
+        $objeto = new ResponsableV($numEmpleado, $numLicencia, $nombre, $apellido);
+    }
+    
+    return $objeto;
 }
