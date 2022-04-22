@@ -85,7 +85,7 @@ class Viaje{
      * @return bool
      */
 
-    public function quitarPasajero($pasajero){
+    public function quitarPasajero($dniPasajero){
         $arrayNuevo = $this->getPasajeros();
         $n = count($arrayNuevo);
         $bolean = false;
@@ -93,20 +93,21 @@ class Viaje{
             $bolean = false;
         }else{
             for($i = 0; $i < $n; $i++){
-                if($pasajero == $arrayNuevo[$i]->getNumDocumento()){
-                    $clave = array_search($arrayNuevo[$i], $arrayNuevo);
-                    array_splice($arrayNuevo, $clave, 1);
-                    $this->setPasajeros($arrayNuevo);
+                if($dniPasajero == $arrayNuevo[$i]->getNumDocumento()){
+                    $num = $i;
                     $bolean = true;
-                 }
+                }
             }
-        }  
+        } 
+        if($bolean == true){
+            array_splice($arrayNuevo, $num, 1);
+            $this->setPasajeros($arrayNuevo);
+        } 
          return $bolean;
     }
 
     /** MODIFICAR DATOS DE UN PASAJERO
-     * @param array $pasajero1
-     * @param array $pasajeroModificado
+     * @param string $pasajero1
      * @return bool
      */
 
@@ -121,7 +122,7 @@ class Viaje{
                 if($pasajero1 == $array[$i]->getNumDocumento()){
                     echo "Ingrese los nuevo datos: \n";
                     $nuevosDatos = obtenerDatos("pasajero");
-                    $clave = array_search($pasajero1, $array);
+                    $clave = array_search($array[$i], $array);
                     $array[$clave] = $nuevosDatos;
                     $this->setPasajeros($array);
                     $bolean = true;
