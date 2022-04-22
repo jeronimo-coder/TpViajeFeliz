@@ -41,24 +41,30 @@ do{
             break;
 
         case '3':
-            echo "Ingrese los datos del pasajero que quiere modificar: \n";
-            $pasajero = obtenerDatos("pasajero");
-            echo "Ingrese los nuevo datos: \n";
-            $nuevosDatos = obtenerDatos("pasajero");
-            if($viaje1->modificarPasajero($pasajero, $nuevosDatos)){
-                echo "Modificado con exito.";
-            } else {
-                echo "Este pasajero no se encuentra agendado.";
-            }
+            if(count($viaje1->getPasajeros()) == 0){
+                echo "No hay pasajeros que modificar";
+            }else{
+                echo "Ingrese el DNI del pasajero a modificar: \n";
+                $pasajero = trim(fgets(STDIN));
+                if($viaje1->modificarPasajero($pasajero)){
+                    echo "Modificado con exito.";
+                } else {
+                    echo "Este pasajero no se encuentra agendado.";
+                }
+            } 
             break;
         
         case '4':
-            echo "Ingrese los datos del pasajero que desea sacar: \n";
-            $pasajeroQuitar = obtenerDatos("pasajero");
+            if(count($viaje1->getPasajeros()) == 0){
+                echo "No hay pasajeros que quitar";
+            }else{
+                echo "Ingrese el DNI del pasajero a quitar: \n";
+            $pasajeroQuitar = trim(fgets(STDIN));
             if($viaje1->quitarPasajero($pasajeroQuitar)){
                 echo "Quitado del viaje con exito.";
             }else{
                 echo "Este pasajero no se encuentra agendado.";
+            }
             }
             break;
         

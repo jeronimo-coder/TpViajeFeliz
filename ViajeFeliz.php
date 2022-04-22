@@ -55,18 +55,26 @@ class Viaje{
     }
 
     /** METODO PARA AGREGAR PASAJERO
-     * @param array $pasajeroNuevo
+     * @param object $pasajeroNuevo
      * @return bool
      */
     public function agregarPasajero($pasajeroNuevo){
         $array = $this->getPasajeros();
-        $bolean = false;
-        if(in_array($pasajeroNuevo, $array)){
-            $bolean = false;
-        } else{
+        $n = count($array);
+        $bolean = true;
+        if($n == 0){
+            $bolean = true;
+        }else{
+            for($i = 0; $i < $n; $i++){
+                if($pasajeroNuevo->getNumDocumento() == $array[$i]->getNumDocumento()){
+                $bolean = false;
+                }
+            }
+        }
+        
+        if($bolean == true){
             array_push($array, $pasajeroNuevo);
             $this->setPasajeros($array);
-            $bolean = true;
         }
         return $bolean;
     }
@@ -79,13 +87,20 @@ class Viaje{
 
     public function quitarPasajero($pasajero){
         $arrayNuevo = $this->getPasajeros();
+        $n = count($arrayNuevo);
         $bolean = false;
-         if(in_array($pasajero, $arrayNuevo)){
-            $clave = array_search($pasajero, $arrayNuevo);
-            array_splice($arrayNuevo, $clave, 1);
-            $this->setPasajeros($arrayNuevo);
-            $bolean = true;
-         }
+        if($n == 0){
+            $bolean = false;
+        }else{
+            for($i = 0; $i < $n; $i++){
+                if($pasajero == $arrayNuevo[$i]->getNumDocumento()){
+                    $clave = array_search($arrayNuevo[$i], $arrayNuevo);
+                    array_splice($arrayNuevo, $clave, 1);
+                    $this->setPasajeros($arrayNuevo);
+                    $bolean = true;
+                 }
+            }
+        }  
          return $bolean;
     }
 
@@ -95,15 +110,24 @@ class Viaje{
      * @return bool
      */
 
-    public function modificarPasajero($pasajero1, $pasajeroModificado){
+    public function modificarPasajero($pasajero1){
         $array = $this->getPasajeros();
+        $n = count($array);
         $bolean = false;
-        if(in_array($pasajero1, $array)){
-            $clave = array_search($pasajero1, $array);
-            $array[$clave] = $pasajeroModificado;
-            $this->setPasajeros($array);
-            $bolean = true;
-        }
+        if($n == 0){
+            $bolean = false;
+        }else{
+            for($i = 0; $i < $n; $i++){
+                if($pasajero1 == $array[$i]->getNumDocumento()){
+                    echo "Ingrese los nuevo datos: \n";
+                    $nuevosDatos = obtenerDatos("pasajero");
+                    $clave = array_search($pasajero1, $array);
+                    $array[$clave] = $nuevosDatos;
+                    $this->setPasajeros($array);
+                    $bolean = true;
+                }
+            }           
+        }       
         return $bolean;
     }
 
@@ -139,6 +163,7 @@ class Viaje{
     
     public function __toString(){
         $pasajeros = $this->mostrarInfoPasajeros();
+        /* $pasajeros = $this->getPasajeros(); */
         $responsable = $this->getResponsable();
         $array = $this->getPasajeros();
         $cantidadPasajero = count($array);
